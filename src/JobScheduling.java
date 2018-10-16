@@ -6,34 +6,83 @@ import java.util.HashSet;
  */
 public class JobScheduling extends CSP
 {
+	private final Integer timeAXEL = 10;
+	private final Integer timeWHEEL = 1;
+	private final Integer timeNUTS = 2;
+	private final Integer timeCAP = 1;
+	private final Integer timeINSPECT = 3;
+
+
 	public JobScheduling() {
-		this.domain = Domain.color();
+		this.domain = Domain.timeRange(30-timeINSPECT);
 		this.vars = new HashSet<Variable>();
 		this.cons = new HashSet<Constraint>();
 		
-		Variable WA = new Variable("WA", this.domain);
-		Variable NT = new Variable("NT", this.domain);
-		Variable Q = new Variable("Q", this.domain);
-		Variable NSW = new Variable("NSW", this.domain);
-		Variable V = new Variable("V", this.domain);
-		Variable SA = new Variable("SA", this.domain);
-		Variable T = new Variable("T", this.domain);
-		this.vars.add(WA);
-		this.vars.add(NT);
-		this.vars.add(Q);
-		this.vars.add(NSW);
-		this.vars.add(V);
-		this.vars.add(SA);
-		this.vars.add(T);
-		this.cons.add(new NotEqualConstraint(SA, WA));
-		this.cons.add(new NotEqualConstraint(SA, NT));
-		this.cons.add(new NotEqualConstraint(SA, Q));
-		this.cons.add(new NotEqualConstraint(SA, NSW));
-		this.cons.add(new NotEqualConstraint(SA, V));
-		this.cons.add(new NotEqualConstraint(WA, NT));
-		this.cons.add(new NotEqualConstraint(NT, Q));
-		this.cons.add(new NotEqualConstraint(Q, NSW));
-		this.cons.add(new NotEqualConstraint(NSW, V));
+		Variable AXELf = new Variable("AXELf", this.domain);
+		Variable AXELb = new Variable("AXELb", this.domain);
+		Variable WHEELrf = new Variable("WHEELrf", this.domain);
+		Variable WHEELlf = new Variable("WHEELlf", this.domain);
+		Variable WHEELrb = new Variable("WHEELrb", this.domain);
+		Variable WHEELlb = new Variable("WHEELlb", this.domain);
+		Variable NUTSrf = new Variable("NUTSrf", this.domain);
+		Variable NUTSlf = new Variable("NUTSlf", this.domain);
+		Variable NUTSrb = new Variable("NUTSrb", this.domain);
+		Variable NUTSlb = new Variable("NUTSlb", this.domain);
+		Variable CAPrf = new Variable("CAPrf", this.domain);
+		Variable CAPlf = new Variable("CAPlf", this.domain);
+		Variable CAPrb = new Variable("CAPrb", this.domain);
+		Variable CAPlb = new Variable("CAPlb", this.domain);
+		Variable INSPECT = new Variable("INSPECT", this.domain);
+
+		this.vars.add(AXELf);
+		this.vars.add(AXELb);
+		this.vars.add(WHEELrf);
+		this.vars.add(WHEELlf);
+		this.vars.add(WHEELrb);
+		this.vars.add(WHEELlb);
+		this.vars.add(NUTSrf);
+		this.vars.add(NUTSlf);
+		this.vars.add(NUTSrb);
+		this.vars.add(NUTSlb);
+		this.vars.add(CAPrf);
+		this.vars.add(CAPlf);
+		this.vars.add(CAPrb);
+		this.vars.add(CAPlb);
+		this.vars.add(INSPECT);
+
+		//Part order constraints
+		this.cons.add(new TimeConstraint(AXELf, timeAXEL, WHEELrf));
+		this.cons.add(new TimeConstraint(AXELf, timeAXEL, WHEELlf));
+		this.cons.add(new TimeConstraint(AXELb, timeAXEL, WHEELrb));
+		this.cons.add(new TimeConstraint(AXELb, timeAXEL, WHEELlb));
+		this.cons.add(new TimeConstraint(WHEELrf, timeWHEEL, NUTSrf));
+		this.cons.add(new TimeConstraint(WHEELlf, timeWHEEL, NUTSlf));
+		this.cons.add(new TimeConstraint(WHEELrb, timeWHEEL, NUTSrb));
+		this.cons.add(new TimeConstraint(WHEELlb, timeWHEEL, NUTSlb));
+		this.cons.add(new TimeConstraint(NUTSrf, timeNUTS, CAPrf));
+		this.cons.add(new TimeConstraint(NUTSlf, timeNUTS, CAPlf));
+		this.cons.add(new TimeConstraint(NUTSrb, timeNUTS, CAPrb));
+		this.cons.add(new TimeConstraint(NUTSlb, timeNUTS, CAPlb));
+		
+		//"Workers share the axel tool" so one comes before the other
+		this.cons.add(new TimeConstraint(AXELf, 10, AXELb));
+/*
+		//Everything done before inspection
+		this.cons.add(new TimeConstraint(AXELf, timeAXEL, INSPECT));
+		this.cons.add(new TimeConstraint(AXELb, timeAXEL, INSPECT));
+		this.cons.add(new TimeConstraint(WHEELrf, timeWHEEL, INSPECT));
+		this.cons.add(new TimeConstraint(WHEELlf, timeWHEEL, INSPECT));
+		this.cons.add(new TimeConstraint(WHEELrb, timeWHEEL, INSPECT));
+		this.cons.add(new TimeConstraint(WHEELlb, timeWHEEL, INSPECT));
+		this.cons.add(new TimeConstraint(NUTSrf, timeNUTS, INSPECT));
+		this.cons.add(new TimeConstraint(NUTSlf, timeNUTS, INSPECT));
+		this.cons.add(new TimeConstraint(NUTSrb, timeNUTS, INSPECT));
+		this.cons.add(new TimeConstraint(NUTSlb, timeNUTS, INSPECT));
+		*/
+		this.cons.add(new TimeConstraint(CAPrf, timeCAP, INSPECT));
+		this.cons.add(new TimeConstraint(CAPlf, timeCAP, INSPECT));
+		this.cons.add(new TimeConstraint(CAPrb, timeCAP, INSPECT));
+		this.cons.add(new TimeConstraint(CAPlb, timeCAP, INSPECT));
 	}
 	
 	public static void main(String[] args) {

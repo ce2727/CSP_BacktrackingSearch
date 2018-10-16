@@ -1,4 +1,4 @@
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class AI 
@@ -24,6 +24,7 @@ public class AI
 		
 		Variable unassigned = selectUnassignedVariable(a);
 		LinkedList<Integer> values = orderDomainValues(unassigned, a, csp);
+		Collections.sort(values);
 		for(Integer i : values)
 		{
 			if(isConsistent(i, unassigned, a, csp))
@@ -44,28 +45,37 @@ public class AI
 	
 	private static boolean isConsistent(Integer i, Variable unassigned, Assignment a, CSP csp) 
 	{
-		//Find constraints that are applicable to the assignment
-		HashSet<Constraint> applicable = new HashSet<Constraint>();
+		//Check that the constraint still holds
 		for(Constraint c : csp.cons)
 		{
-			if((c.v1 == unassigned || c.v2 == unassigned) && c.v1 != null && c.v2 != null)
-			{
-				applicable.add(c);
-			}
-		}
-		//Check that the constraint still holds
-		for(Constraint c : applicable)
-		{
+			//If it's a NotEqualConstraint -- cast it to that
 			if(c.getClass() == NotEqualConstraint.class)
 			{
+				NotEqualConstraint nec = (NotEqualConstraint) c;
 				//If v1 is the unassigned
-				if(c.v1 == unassigned)
+				if(nec.v1 == unassigned)
 				{
 					//check if i == v2
-					if(i == a.assignments.get(c.v2)) return false;
-				} else if (c.v2 == unassigned)
+					if(i == a.assignments.get(nec.v2)) return false;
+				} else if (nec.v2 == unassigned)
 				{
-					if(i == a.assignments.get(c.v1)) return false;
+					if(i == a.assignments.get(nec.v1)) return false;
+				}
+			}
+			
+			//If it's a NotEqualConstraint -- cast it to that
+			if(c.getClass() == TimeConstraint.class)
+			{
+				TimeConstraint tc = (TimeConstraint) c;
+				//If v1 is the unassigned
+				if(tc.vSooner == unassigned && a.assignments.get(tc.vLater) != null)
+				{
+					//If setting the start time of a job would cause a conflict with a job that comes after, it's not consistent
+					if(!((i + tc.duration) <= a.assignments.get(tc.vLater))) return false;
+				} else if (tc.vLater == unassigned && a.assignments.get(tc.vSooner) != null)
+				{
+					//If setting the end time of a job conflicts with a job that comes before, it's not consistent
+					if(!((a.assignments.get(tc.vSooner) + tc.duration) <= i)) return false;
 				}
 			}
 		}	
@@ -82,6 +92,7 @@ public class AI
 				return v;
 			}
 		}
+		
 		
 		//Shouldn't be reached so long as isComplete is run beforehand
 		return null;

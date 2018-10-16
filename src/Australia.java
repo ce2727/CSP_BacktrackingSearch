@@ -44,6 +44,7 @@ public class Australia extends CSP
 		Assignment solution = AI.BacktrackingSearch(csp);
 		long end = new Date().getTime();
 		System.out.format("time: %.3f secs\n", (end-start)/1000.0);
-		System.out.println("result=\n" + solution.toString());
+		
+		System.out.println("Result: (0 = red, 1 = green, 2 = blue)\n" + solution.toString());
 	}
 }

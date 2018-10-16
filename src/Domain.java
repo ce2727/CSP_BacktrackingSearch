@@ -14,4 +14,14 @@ public class Domain
 		
 		return domain;
 	}
+	
+	public static HashSet<Integer> timeRange(int length)
+	{
+		HashSet<Integer> span = new HashSet<Integer>();
+		for(Integer i = 0; i <= length; i++)
+		{
+			span.add(i);
+		}
+		return span;
+	}
 }

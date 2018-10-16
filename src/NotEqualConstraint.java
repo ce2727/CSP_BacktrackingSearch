@@ -1,8 +1,13 @@
 
 public class NotEqualConstraint extends Constraint
 {
-	public NotEqualConstraint(Variable v1, Variable v2) {
-		super(v1, v2);
+	public Variable v1;
+	public Variable v2;
+	
+	public NotEqualConstraint(Variable v1, Variable v2)
+	{
+		this.v1 = v1;
+		this.v2 = v2;
 	}
 	
 }
