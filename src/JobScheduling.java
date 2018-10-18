@@ -66,19 +66,7 @@ public class JobScheduling extends CSP
 		
 		//"Workers share the axel tool" so one comes before the other
 		this.cons.add(new TimeConstraint(AXELf, 10, AXELb));
-/*
-		//Everything done before inspection
-		this.cons.add(new TimeConstraint(AXELf, timeAXEL, INSPECT));
-		this.cons.add(new TimeConstraint(AXELb, timeAXEL, INSPECT));
-		this.cons.add(new TimeConstraint(WHEELrf, timeWHEEL, INSPECT));
-		this.cons.add(new TimeConstraint(WHEELlf, timeWHEEL, INSPECT));
-		this.cons.add(new TimeConstraint(WHEELrb, timeWHEEL, INSPECT));
-		this.cons.add(new TimeConstraint(WHEELlb, timeWHEEL, INSPECT));
-		this.cons.add(new TimeConstraint(NUTSrf, timeNUTS, INSPECT));
-		this.cons.add(new TimeConstraint(NUTSlf, timeNUTS, INSPECT));
-		this.cons.add(new TimeConstraint(NUTSrb, timeNUTS, INSPECT));
-		this.cons.add(new TimeConstraint(NUTSlb, timeNUTS, INSPECT));
-		*/
+
 		this.cons.add(new TimeConstraint(CAPrf, timeCAP, INSPECT));
 		this.cons.add(new TimeConstraint(CAPlf, timeCAP, INSPECT));
 		this.cons.add(new TimeConstraint(CAPrb, timeCAP, INSPECT));
